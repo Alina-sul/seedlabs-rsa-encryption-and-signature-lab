@@ -20,6 +20,8 @@ int main ()
   BIGNUM *n = BN_new();
   BIGNUM *etf_of_n = BN_new();
   BIGNUM *res = BN_new();
+  BIGNUM *p_minus1 = BN_new();
+  BIGNUM *q_minus1 = BN_new();
   
   // Initialize a, b, n
   BN_hex2bn(&p, "F7E75FDC469067FFDC4E847C51F452DF");
@@ -27,15 +29,25 @@ int main ()
   BN_hex2bn(&e, "0D88C3");
 
   // Calculate n
-  BN_mul(res, p, q, ctx);
-  printBN("n = ", res);
-  BN_hex2bn(&n, res);
+  BN_mul(n, p, q, ctx);
+  printBN("n = ", n);
   
   // Calculate Euler's totient function of n
-  BN_mul(res, (p-1), (q-1), ctx);
-  printBN("φ(n) = ", res);
-  BN_hex2bn(&etf_of_n, res);
+  BN_sub(p_minus1, p, BN_value_one());
+  BN_sub(q_minus1, q, BN_value_one());
+  BN_mul(etf_of_n, p_minus1, q_minus1, ctx);
+  printBN("φ(n) = ", etf_of_n);
 
+  // Free the allocated memory
+  BN_free(p);
+  BN_free(q);
+  BN_free(e);
+  BN_free(n);
+  BN_free(etf_of_n);
+  BN_free(res);
+  BN_free(p_minus1);
+  BN_free(q_minus1);
+  BN_CTX_free(ctx);
 
   return 0;
 }
