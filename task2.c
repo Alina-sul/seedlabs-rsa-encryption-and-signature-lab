@@ -64,12 +64,6 @@ int main()
   // Decrypt the message using the private key (d, n)
   decrypt(C, d, n, &result_str);
 
-  // Compare the decrypted message to the original message
-  if (strcmp(result_str, message_str) == 0)
-    printf("Encryption and decryption successful!\n");
-  else
-    printf("Encryption and decryption unsuccessful.\n");
-
   // Free memory
   BN_free(n);
   BN_free(e);
