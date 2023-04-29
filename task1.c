@@ -22,16 +22,17 @@ int BN_mod_inverse_extended_euclidean(BIGNUM *r, BIGNUM *a, const BIGNUM *m, BN_
     BN_one(r);
     BN_zero(t);
 
-    while (BN_cmp(a, BN_value_one()) > 0) {
+    while (BN_cmp(a, m) > 0) {
         BN_mod(r_next, a, m, ctx);
-        BN_div(nt, NULL, m, a, ctx);
+        BN_div(nt, NULL, a, m, ctx);
 
         BIGNUM *tmp = BN_new();
         BN_mul(tmp, nt, r, ctx);
         BN_mod_sub(t, t, tmp, m_copy, ctx);
 
-        BN_swap(a, r_next);
+        BN_swap(a, m);
         BN_swap(r, t);
+        BN_swap(m, r_next);
     }
 
     if (BN_is_negative(r)) {
@@ -45,6 +46,7 @@ int BN_mod_inverse_extended_euclidean(BIGNUM *r, BIGNUM *a, const BIGNUM *m, BN_
 
     return 1;
 }
+
 
 
 int main ()
