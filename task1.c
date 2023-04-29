@@ -10,44 +10,6 @@ void printBN(char *msg, BIGNUM * a)
   OPENSSL_free(number_str);
 }
 
-// Extended Euclidean Algorithm
-int BN_mod_inverse_extended_euclidean(BIGNUM *r, BIGNUM *a, const BIGNUM *m, BN_CTX *ctx) {
-    BIGNUM *t = BN_new();
-    BIGNUM *nt = BN_new();
-    BIGNUM *r_next = BN_new();
-    BIGNUM *m_copy = BN_new();
-
-    BN_copy(m_copy, m);
-
-    BN_one(r);
-    BN_zero(t);
-
-    while (BN_cmp(a, m) > 0) {
-        BN_mod(r_next, a, m, ctx);
-        BN_div(nt, NULL, a, m, ctx);
-
-        BIGNUM *tmp = BN_new();
-        BN_mul(tmp, nt, r, ctx);
-        BN_mod_sub(t, t, tmp, m_copy, ctx);
-
-        BN_swap(a, m);
-        BN_swap(r, t);
-        BN_swap(m, r_next);
-    }
-
-    if (BN_is_negative(r)) {
-        BN_add(r, r, m_copy);
-    }
-
-    BN_free(t);
-    BN_free(nt);
-    BN_free(r_next);
-    BN_free(m_copy);
-
-    return 1;
-}
-
-
 
 int main ()
 {
@@ -77,7 +39,7 @@ int main ()
   printBN("φ(n) = ", etf_of_n);
 
   // Calculate the modular multiplicative inverse of e modulo φ(n): d
-  BN_mod_inverse_extended_euclidean(d, e, etf_of_n, ctx);
+  BN_mod_inverse(d, e, etf_of_n, ctx);
   printBN("d = ", d);
 
   // Free the allocated memory
