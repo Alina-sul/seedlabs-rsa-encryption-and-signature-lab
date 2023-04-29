@@ -11,7 +11,7 @@ void printBN(char *msg, BIGNUM * a)
 }
 
 // Extended Euclidean Algorithm
-int BN_mod_inverse_extended_euclidean(BIGNUM *r, const BIGNUM *a, const BIGNUM *m, BN_CTX *ctx) {
+int BN_mod_inverse_extended_euclidean(BIGNUM *r, BIGNUM *a, const BIGNUM *m, BN_CTX *ctx) {
     BIGNUM *t = BN_new();
     BIGNUM *nt = BN_new();
     BIGNUM *r_next = BN_new();
@@ -45,6 +45,7 @@ int BN_mod_inverse_extended_euclidean(BIGNUM *r, const BIGNUM *a, const BIGNUM *
 
     return 1;
 }
+
 
 int main ()
 {
