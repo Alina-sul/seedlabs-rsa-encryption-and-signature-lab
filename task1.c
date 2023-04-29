@@ -18,17 +18,24 @@ int main ()
   BIGNUM *q = BN_new();
   BIGNUM *e = BN_new();
   BIGNUM *n = BN_new();
+  BIGNUM *etf_of_n = BN_new();
   BIGNUM *res = BN_new();
   
   // Initialize a, b, n
   BN_hex2bn(&p, "F7E75FDC469067FFDC4E847C51F452DF");
   BN_hex2bn(&q, "E85CED54AF57E53E092113E62F436F4F");
   BN_hex2bn(&e, "0D88C3");
-  
+
   // Calculate n
   BN_mul(res, p, q, ctx);
   printBN("n = ", res);
+  BN_hex2bn(&n, res);
   
+  // Calculate Euler's totient function of n
+  BN_mul(res, (p-1), (q-1), ctx);
+  printBN("φ(n) = ", res);
+  BN_hex2bn(&etf_of_n, res);
+
 
   return 0;
 }
