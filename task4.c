@@ -2,6 +2,33 @@
 #include <string.h>
 #include <openssl/bn.h>
 
+void verify_message(BIGNUM *S, BIGNUM *e, BIGNUM *n, char **result_str)
+{
+  BN_CTX *ctx = BN_CTX_new();
+  BIGNUM *M = BN_new();
+
+  // Verify the signature using the public key (e, n)
+  BN_mod_exp(M, S, e, n, ctx);
+
+  // Convert the verified message to a hexadecimal string
+  *result_str = BN_bn2hex(M);
+
+  // Convert the hexadecimal string back to an ASCII string
+  char *message_str = (char*) malloc(strlen(*result_str) / 2 + 1);
+  int i;
+  for (i = 0; i < strlen(*result_str) / 2; i++)
+    sscanf(*result_str + i * 2, "%02X", message_str + i);
+  message_str[strlen(*result_str) / 2] = '\0';
+
+  // Print the verified message
+  printf("Verified message: %s\n", message_str);
+
+  // Free memory
+  BN_free(M);
+  BN_CTX_free(ctx);
+  free(message_str);
+}
+
 void sign_message(BIGNUM *M, BIGNUM *d, BIGNUM *n, char **result_str)
 {
   BN_CTX *ctx = BN_CTX_new();
