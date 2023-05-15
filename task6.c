@@ -30,6 +30,14 @@ int main()
 
   // Step 3: Hashing the certificate's body
   // This should be done using the SHA-256 algorithm, and the result should be a BIGNUM
+
+  // Convert hex string M to binary
+  size_t len = strlen(M) / 2;
+  unsigned char *bin_M = malloc(len);
+  for (size_t i = 0; i < len; i++) {
+    sscanf(M + 2*i, "%02hhx", bin_M + i);
+  }
+  
   unsigned char digest[SHA256_DIGEST_LENGTH];
   SHA256(M, len, digest);
 
