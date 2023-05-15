@@ -30,9 +30,15 @@ int main()
 
   // Step 3: Hashing the certificate's body
   // This should be done using the SHA-256 algorithm, and the result should be a BIGNUM
-  // This is a placeholder, you should replace it with actual code to hash 'M'
-  BIGNUM *hash = BN_new();
-  BN_hex2bn(&hash, M);
+  unsigned char digest[SHA256_DIGEST_LENGTH];
+  SHA256(M, len, digest);
+
+  // Convert the binary digest to a BIGNUM
+  BIGNUM *hash = BN_bin2bn(digest, SHA256_DIGEST_LENGTH, NULL);
+  if (!hash) {
+    printf("Error creating BIGNUM from SHA256 hash.\n");
+    exit(1);
+  }
 
   // Step 4: Decrypting the CA's signature
   BIGNUM *bn_S = BN_new();
